@@ -5,15 +5,13 @@ import { Album } from "./entities/Album";
 
 export const AppDataSource = new DataSource({
     type: "postgres",
-    host: process.env.DB_HOST || "localhost",
-    port: Number(process.env.DB_PORT) || 5432,
-    username: process.env.DB_USER || "postgres",
-    password: process.env.DB_PASSWORD || "postgres",
-    database: process.env.DB_NAME || "photo_album",
-    dropSchema: true,
-    synchronize: true,
-    //logging: true,
+    url: process.env.DATABASE_URL,
+    synchronize: true, // Consider false for production + use migrations
+    dropSchema: false, // Avoid dropping DB in production!
+    ssl: {
+        rejectUnauthorized: false, // Required for Heroku's self-signed certs
+    },
     entities: [Photo, User, Album],
     subscribers: [],
-    migrations: []
+    migrations: [],
 });
